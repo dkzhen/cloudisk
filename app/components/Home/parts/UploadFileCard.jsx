@@ -6,6 +6,7 @@ import ButtonProgressBar from "./ButtonProgressBar";
 import { db, storage } from "@/config/FirebaseConfig";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore/lite";
+import Image from "next/image";
 
 function UploadFileCard() {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -144,7 +145,12 @@ function UploadFileCard() {
         className="flex flex-col cursor-pointer justify-center mr-5 md:mr-0 border-2 border-dashed border-[#9DB2BF] mt-5 w-full md:w-96 h-52 items-center rounded-lg p-3"
       >
         <div className="flex flex-col justify-center items-center">
-          <img src="/cloud-computing.png" alt="upload" className="w-16 h-16" />
+          <Image
+            src={"/cloud-computing.png"}
+            alt={"upload"}
+            width={64}
+            height={64}
+          />
           <p>Upload Files</p>
         </div>
         <input
@@ -185,10 +191,11 @@ function UploadFileCard() {
             }`}
           >
             <div className="flex justify-start items-center gap-2">
-              <img
+              <Image
                 src={selectedStorage.image}
                 alt={selectedStorage.name}
-                className="w-10 h-10"
+                width={40}
+                height={40}
               />
               <p>{selectedStorage.name}</p>
             </div>
@@ -229,11 +236,13 @@ function UploadFileCard() {
                   }`}
                 >
                   <div className="flex justify-start items-center gap-2">
-                    <img
+                    <Image
                       src={storage.image}
                       alt={storage.name}
-                      className="w-10 h-10"
+                      width={40}
+                      height={40}
                     />
+
                     <p>{storage.name}</p>
                   </div>
                 </li>

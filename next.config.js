@@ -9,6 +9,9 @@ const nextConfig = {
     APP_ID: "1:277503513519:web:00388e161340280553155a",
     MEASUREMENT_ID: "G-5ZEXJT1KC6",
   },
+  images: {
+    domains: ["firebasestorage.googleapis.com"],
+  },
 };
 
 module.exports = nextConfig;

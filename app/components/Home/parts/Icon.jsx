@@ -1,6 +1,8 @@
 import React from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+
 function Icon({ svg, path }) {
   const pathname = usePathname();
   return (
@@ -10,7 +12,7 @@ function Icon({ svg, path }) {
         path == pathname ? "bg-[#ADC4CE]" : "bg-white"
       }  rounded-2xl `}
     >
-      <img src={`/${svg}`} alt="Home SVG" width={20} height={20} />
+      <Image src={`/${svg}`} alt={"Home SVG"} width={20} height={20} />
     </Link>
   );
 }

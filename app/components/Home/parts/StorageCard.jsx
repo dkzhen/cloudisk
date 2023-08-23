@@ -1,13 +1,16 @@
+import Image from "next/image";
 import React from "react";
 
 function StorageCard({ name, capacity, type, image, id }) {
   return (
     <div className="flex flex-col justify-start mr-5 md:mr-0 bg-[#9DB2BF] w-96 h-52 items-start rounded-lg p-3">
       <div className="flex flex-row gap-3 justify-center items-center ">
-        <img
+        <Image
           src={`/${image}`}
-          className="w-14 h-14 bg-white rounded-lg"
-          alt="logo-storage"
+          className=" bg-white rounded-lg"
+          alt={"logo-storage"}
+          width={56}
+          height={56}
         />
         <span className="text-lg font-bold">
           {name} {id}
