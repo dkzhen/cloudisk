@@ -1,5 +1,5 @@
 import React from "react";
-import Icon from "./parts/icon";
+import Icon from "./parts/Icon";
 import { LogoSideBar } from "@/utils/constants";
 
 function SideBar() {
