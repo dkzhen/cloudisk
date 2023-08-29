@@ -2,6 +2,7 @@ import Image from "next/image";
 import React from "react";
 
 function FileCardItem({ name, size, lastModified, url }) {
+  const [downloadUrl, setDownloadUrl] = useState(url);
   const handleDownload = () => {
     fetch(url)
       .then((response) => response.blob())
