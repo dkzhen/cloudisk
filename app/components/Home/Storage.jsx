@@ -27,7 +27,9 @@ function Storage({ dataReceived }) {
   return (
     <div
       className={`w-full flex ${
-        dataReceived == 1 ? "flex-wrap" : "flex-row"
+        dataReceived == 1
+          ? "flex-wrap"
+          : "flex-row justify-between md:pr-[70px] pr-0"
       } md:gap-10 gap-4 mt-5`}
     >
       {dataReceived == 1

@@ -25,6 +25,7 @@ function UploadFileCard() {
     setProgressSuccess(0);
     setFiles(event.target.files);
     const files = event.target.files;
+    console.log(files);
     const newSelectedFiles = [];
 
     for (let i = 0; i < files.length; i++) {
@@ -79,13 +80,20 @@ function UploadFileCard() {
           (error) => {
             switch (error.code) {
               case "storage/unauthorized":
+                console.log("Upload is unauthorized");
                 // User doesn't have permission to access the object
                 break;
               case "storage/canceled":
+                console.log("Upload is canceled");
                 // User canceled the upload
                 break;
               case "storage/unknown":
+                console.log("Upload is unknown");
                 // Unknown error occurred, inspect error.serverResponse
+                break;
+              case "storage/no-default-bucket":
+                console.error("Upload is bucket default not found");
+
                 break;
             }
           },
@@ -100,10 +108,21 @@ function UploadFileCard() {
               .then(async (downloadURL) => {
                 // console.log("File available at", downloadURL);
                 try {
+                  const datenow = new Date();
+                  const dateFormatOptions = {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  };
+                  const formattedDate = datenow.toLocaleDateString(
+                    "en-US",
+                    dateFormatOptions
+                  );
                   const docRef = await addDoc(collection(db, "images"), {
                     name: file.name,
                     url: downloadURL,
                     size: file.size,
+                    lastmodified: formattedDate,
                   });
                   // console.log("Document written with ID: ", docRef.id);
                 } catch (e) {
@@ -116,16 +135,20 @@ function UploadFileCard() {
               .catch((error) => {
                 switch (error.code) {
                   case "storage/object-not-found":
+                    console.log("error storage object not found");
                     // File doesn't exist
                     break;
                   case "storage/unauthorized":
+                    console.log("error storage object unauthorized");
                     // User doesn't have permission to access the object
                     break;
                   case "storage/canceled":
                     // User canceled the upload
+                    console.log("error storage object canceled");
                     break;
                   case "storage/unknown":
                     // Unknown error occurred, inspect the server response
+                    console.log("error storage object unknown");
                     break;
                 }
               });
@@ -192,7 +215,7 @@ function UploadFileCard() {
           >
             <div className="flex justify-start items-center gap-2">
               <Image
-                src={selectedStorage.image}
+                src={"/" + selectedStorage.image}
                 alt={selectedStorage.name}
                 width={40}
                 height={40}
@@ -237,7 +260,7 @@ function UploadFileCard() {
                 >
                   <div className="flex justify-start items-center gap-2">
                     <Image
-                      src={storage.image}
+                      src={"/" + storage.image}
                       alt={storage.name}
                       width={40}
                       height={40}
