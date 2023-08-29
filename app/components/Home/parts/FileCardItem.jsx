@@ -1,14 +1,14 @@
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 
 function FileCardItem({ name, size, lastModified, url }) {
-  const [downloadUrl, setDownloadUrl] = useState(url);
+  //   const [downloadUrl, setDownloadUrl] = useState(url);
   const handleDownload = () => {
     fetch(url)
       .then((response) => response.blob())
       .then((blob) => {
         const downloadUrl = URL.createObjectURL(blob);
-        setDownloadUrl(downloadUrl);
+        // setDownloadUrl(downloadUrl);
 
         const anchor = document.createElement("a");
         anchor.href = downloadUrl;
