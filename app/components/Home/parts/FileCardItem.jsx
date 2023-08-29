@@ -1,23 +1,17 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 
 function FileCardItem({ name, size, lastModified, url }) {
-  //   const [downloadUrl, setDownloadUrl] = useState(url);
   const handleDownload = () => {
-    fetch(url)
-      .then((response) => response.blob())
-      .then((blob) => {
-        const downloadUrl = URL.createObjectURL(blob);
-        // setDownloadUrl(downloadUrl);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = name; // Nama file yang akan diunduh
+    anchor.style.display = "none"; // Menyembunyikan elemen anchor
+    document.body.appendChild(anchor); // Menambahkan elemen anchor ke dalam dokumen
 
-        const anchor = document.createElement("a");
-        anchor.href = downloadUrl;
-        anchor.download = name;
-        anchor.style.display = "none";
-        document.body.appendChild(anchor);
-        anchor.click();
-        document.body.removeChild(anchor);
-      });
+    anchor.click(); // Simulasi klik pada elemen anchor
+
+    document.body.removeChild(anchor); // Menghapus elemen anchor setelah selesai
   };
   return (
     <div className="flex flex-row items-center justify-between h-12 rounded-md mt-[2px] bg-[#9DB2BF]">
