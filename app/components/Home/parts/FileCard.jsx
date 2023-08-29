@@ -3,8 +3,11 @@ import React, { useEffect, useState } from "react";
 import FileCardItem from "./FileCardItem";
 import { db } from "@/config/FirebaseConfig";
 import { collection, getDocs } from "firebase/firestore/lite";
-import { shortenFileName, convertSize } from "@/utils/functions";
-import Image from "next/image";
+import {
+  shortenFileName,
+  convertSize,
+  fetchDataFirestore,
+} from "@/utils/functions";
 
 function FileCard() {
   const [datas, setDatas] = useState([]);
@@ -30,25 +33,15 @@ function FileCard() {
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
-      const querySnapshot = await getDocs(collection(db, "images"));
-      const data = [];
-      querySnapshot.forEach((doc) => {
-        data.push({
-          name: doc.data().name,
-          size: doc.data().size,
-          url: doc.data().url,
-          lastmodified: doc.data().lastmodified,
-        });
-      });
-      setDatas(data);
+    const getData = async () => {
+      const dataFirestore = await fetchDataFirestore(getDocs, collection, db);
+      setDatas(dataFirestore);
     };
-
-    fetchData();
+    getData();
   }, []);
-  //   console.log(datas);
+
   return (
-    <div className="w-full flex flex-col ">
+    <div className="w-full flex flex-col mb-4 ">
       <div className="flex flex-row items-center justify-between h-8 mt-5 font-bold bg-[#9DB2BF] rounded-md">
         <div className="pl-3 flex flex-row gap-3 w-[50%] md:w-[50%] ">
           <p>Name</p>

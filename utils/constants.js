@@ -5,60 +5,11 @@ const LogoSideBar = [
 ];
 const StorageInfo = [
   {
-    id: "GD-1",
-    name: "Google Drive",
-    capacity: 1,
+    id: "FB-1",
+    name: "Firebase Storage",
+    capacity: 5,
     type: "GB",
-    image: "drive.png",
-  },
-  {
-    id: "SB-1",
-    name: "Supabase",
-    capacity: 1,
-    type: "GB",
-    image: "supabase.png",
-  },
-  {
-    id: "GD-1",
-    name: "Google Drive",
-    capacity: 1,
-    type: "GB",
-    image: "drive.png",
-  },
-  {
-    id: "SB-1",
-    name: "Supabase",
-    capacity: 1,
-    type: "GB",
-    image: "supabase.png",
-  },
-  {
-    id: "GD-1",
-    name: "Google Drive",
-    capacity: 1,
-    type: "GB",
-    image: "drive.png",
-  },
-  {
-    id: "SB-1",
-    name: "Supabase",
-    capacity: 1,
-    type: "GB",
-    image: "supabase.png",
-  },
-  {
-    id: "GD-1",
-    name: "Google Drive",
-    capacity: 1,
-    type: "GB",
-    image: "drive.png",
-  },
-  {
-    id: "SB-1",
-    name: "Supabase",
-    capacity: 1,
-    type: "GB",
-    image: "supabase.png",
+    image: "firebase.png",
   },
 ];
 

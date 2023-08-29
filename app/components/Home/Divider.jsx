@@ -1,4 +1,5 @@
 "use client";
+import { StorageInfo } from "@/utils/constants";
 import React, { useState } from "react";
 
 function Divider({ content, id, dataDivider }) {
@@ -14,7 +15,7 @@ function Divider({ content, id, dataDivider }) {
       <div className="text-lg">{content}</div>
       {id != 1 ? (
         ""
-      ) : (
+      ) : StorageInfo.length >= 3 ? (
         <div
           onClick={handleStorageButton}
           className="flex flex-row items-center md:gap-2 gap-5 mr-5 md:mr-16 text-sm hover:cursor-pointer hover:px-2 hover:bg-[#ADC4CE] hover:rounded-lg"
@@ -41,6 +42,8 @@ function Divider({ content, id, dataDivider }) {
             </svg>
           </span>
         </div>
+      ) : (
+        ""
       )}
     </div>
   );

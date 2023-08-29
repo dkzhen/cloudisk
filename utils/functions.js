@@ -14,4 +14,18 @@ const shortenFileName = (name, maxLength) => {
     name.substr(0, frontChars) + "..." + name.substr(name.length - backChars)
   );
 };
-export { convertSize, shortenFileName };
+
+const fetchDataFirestore = async (getDocs, collection, db) => {
+  const querySnapshot = await getDocs(collection(db, "images"));
+  const data = [];
+  querySnapshot.forEach((doc) => {
+    data.push({
+      name: doc.data().name,
+      size: doc.data().size,
+      url: doc.data().url,
+      lastmodified: doc.data().lastmodified,
+    });
+  });
+  return data;
+};
+export { convertSize, shortenFileName, fetchDataFirestore };
