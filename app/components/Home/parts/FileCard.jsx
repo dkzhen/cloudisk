@@ -8,10 +8,14 @@ import {
   convertSize,
   fetchDataFirestore,
 } from "@/utils/functions";
+import { useSelector } from "react-redux";
+import { doc, onSnapshot } from "firebase/firestore";
 
 function FileCard() {
   const [datas, setDatas] = useState([]);
   const [itemsToShow, setItemsToShow] = useState(1);
+  const sharedVariable = useSelector((state) => state.sharedVariable);
+  const selectedFile = useSelector((state) => state.selectedFile);
 
   useEffect(() => {
     function updateItemsToShow() {
@@ -35,10 +39,45 @@ function FileCard() {
   useEffect(() => {
     const getData = async () => {
       const dataFirestore = await fetchDataFirestore(getDocs, collection, db);
+      dataFirestore.sort(
+        (a, b) => new Date(b.lastmodified) - new Date(a.lastmodified)
+      );
       setDatas(dataFirestore);
     };
+
+    const getNewData = () => {
+      const colref = collection(db, "images");
+      let data = [];
+      onSnapshot(
+        colref,
+        (snapshot) => {
+          snapshot.docs.forEach((doc) =>
+            data.push({
+              name: doc.data().name,
+              size: doc.data().size,
+              url: doc.data().url,
+              lastmodified: doc.data().lastmodified,
+            })
+          );
+          data.sort(
+            (a, b) => new Date(b.lastmodified) - new Date(a.lastmodified)
+          );
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    };
+    // Call getData initially
     getData();
-  }, []);
+
+    // Call getNewData only when sharedVariable changes to 1
+    if (sharedVariable === 1) {
+      console.log(sharedVariable);
+      getNewData();
+    }
+  }, [sharedVariable]);
+  // filter datas
 
   return (
     <div className="w-full flex flex-col mb-4 ">

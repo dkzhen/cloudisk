@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StorageInfo } from "@/utils/constants";
 import ButtonUploadFile from "./ButtonUploadFile";
 import { convertSize, shortenFileName } from "@/utils/functions";
@@ -7,6 +7,7 @@ import { db, storage } from "@/config/FirebaseConfig";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore/lite";
 import Image from "next/image";
+import { useDispatch } from "react-redux";
 
 function UploadFileCard() {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -16,6 +17,7 @@ function UploadFileCard() {
   const [progressBar, setProgressBar] = useState(0);
   const [progressSuccess, setProgressSuccess] = useState(0);
   const [startProgress, setStartProgress] = useState(0);
+  const dispatch = useDispatch();
 
   const handleFileStorage = (storage) => {
     setSelectedStorage(storage);
@@ -25,7 +27,7 @@ function UploadFileCard() {
     setProgressSuccess(0);
     setFiles(event.target.files);
     const files = event.target.files;
-    console.log(files);
+    console.log("upload File Card", files);
     const newSelectedFiles = [];
 
     for (let i = 0; i < files.length; i++) {
@@ -39,6 +41,8 @@ function UploadFileCard() {
     setSelectedFiles(newSelectedFiles);
   };
   const handleUpload = async () => {
+    const selectedFile = selectedFiles;
+    dispatch({ type: "SELECTED_FILE", payload: selectedFile });
     setStartProgress(1);
     setProgressSuccess(0);
     if (files.length > 0) {
@@ -101,6 +105,7 @@ function UploadFileCard() {
             const fileLength = files.length;
             if (files[fileLength - 1].name === file.name) {
               setProgressSuccess(1);
+
               // console.log("Upload success for file: " + file.name);
             }
             setProgressBar(0);
@@ -160,6 +165,28 @@ function UploadFileCard() {
       uploadFileAtIndex(0);
     }
   };
+  useEffect(() => {
+    let intervalId;
+
+    const checkProgress = () => {
+      if (progressSuccess === 0) {
+        // console.log("Try uploading");
+        intervalId = setTimeout(checkProgress, 5000); // Menjalankan kembali checkProgress setiap 5 detik
+      } else if (progressSuccess === 1) {
+        console.log("file upload card", progressSuccess);
+        const dataShare = 1;
+        dispatch({ type: "SET_SHARED_VARIABLE", payload: dataShare });
+        clearInterval(intervalId); // Menghentikan perulangan jika progressSuccess menjadi 1
+      }
+    };
+
+    checkProgress(); // Memanggil checkProgress untuk memulai perulangan
+
+    return () => {
+      // Membersihkan interval jika komponen unmount atau progressSuccess berubah
+      clearInterval(intervalId);
+    };
+  }, [progressSuccess]);
 
   return (
     <div className="flex md:flex-row flex-col gap-3">
