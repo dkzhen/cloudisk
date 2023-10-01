@@ -45,36 +45,36 @@ function FileCard() {
       setDatas(dataFirestore);
     };
 
-    const getNewData = () => {
-      const colref = collection(db, "images");
-      let data = [];
-      onSnapshot(
-        colref,
-        (snapshot) => {
-          snapshot.docs.forEach((doc) =>
-            data.push({
-              name: doc.data().name,
-              size: doc.data().size,
-              url: doc.data().url,
-              lastmodified: doc.data().lastmodified,
-            })
-          );
-          data.sort(
-            (a, b) => new Date(b.lastmodified) - new Date(a.lastmodified)
-          );
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    };
+    // const getNewData = () => {
+    //   const colref = collection(db, "images");
+    //   let data = [];
+    //   onSnapshot(
+    //     colref,
+    //     (snapshot) => {
+    //       snapshot.docs.forEach((doc) =>
+    //         data.push({
+    //           name: doc.data().name,
+    //           size: doc.data().size,
+    //           url: doc.data().url,
+    //           lastmodified: doc.data().lastmodified,
+    //         })
+    //       );
+    //       data.sort(
+    //         (a, b) => new Date(b.lastmodified) - new Date(a.lastmodified)
+    //       );
+    //     },
+    //     (error) => {
+    //       console.error(error);
+    //     }
+    //   );
+    // };
     // Call getData initially
     getData();
 
     // Call getNewData only when sharedVariable changes to 1
     if (sharedVariable === 1) {
       console.log(sharedVariable);
-      getNewData();
+      // getNewData();
     }
   }, [sharedVariable]);
   // filter datas
