@@ -1,6 +1,6 @@
 "use client";
 
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import React, { useState, useEffect } from "react";
 import {
   Navbar,

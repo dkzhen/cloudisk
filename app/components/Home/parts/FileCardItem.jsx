@@ -1,5 +1,6 @@
-import { getTypeImage, typeImage } from "@/utils/functions";
+import { getTypeImage, shortenFileName, typeImage } from "@/utils/functions";
 import Image from "next/image";
+
 import React, { useState } from "react";
 
 function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
@@ -22,14 +23,14 @@ function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
   return (
     <div
       className={`flex flex-row items-center justify-between ${
-        isExpanded ? "h-24" : "h-16"
+        isExpanded ? "h-full md:h-24 " : "h-16"
       }
-      } rounded-md mt-[2px] bg-[#9DB2BF] cursor-pointer`}
+      } rounded-md mt-[2px] bg-[#9DB2BF] cursor-pointer w-full`}
       onClick={handleWrap}
     >
       {isExpanded ? (
         // wrap onclick
-        <div className="flex flex-row justify-between w-full ">
+        <div className="flex flex-row justify-between  w-screen ">
           <div className="pl-3 flex-row flex items-center justify-start">
             <Image
               src={`/icons/${typeImage}`}
@@ -37,15 +38,32 @@ function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
               width={40}
               height={40}
             />
-            <div className="flex flex-col items-start ">
-              <p className="ml-4">{nameOriginal}</p>
-              <div className="flex flex-row justify-between items-center space-x-4 ml-4">
+            <div className="flex flex-col  items-start my-3 md:my-0 ">
+              <p className="ml-2  md:ml-4">
+                {nameOriginal.length > 30 ? (
+                  <>
+                    {nameOriginal.slice(0, 30)} {/* 30 karakter pertama */}
+                    <span>{nameOriginal.slice(30)}</span>{" "}
+                    {/* Sisanya dalam <span> */}
+                  </>
+                ) : (
+                  <div>{nameOriginal}</div>
+                )}
+              </p>
+
+              <div className="md:flex md:flex-row md:justify-between md:items-center md:space-x-4 md:ml-4 ml-2">
                 <p>Size: {size}</p>
                 <p>Date: {lastModified}</p>
+                <button
+                  onClick={handleDownload}
+                  className="block md:hidden mt-2 pr-3 bg-blue-300 p-2 rounded-lg"
+                >
+                  Download{" "}
+                </button>
               </div>
             </div>
           </div>
-          <div className="flex justify-center mr-[87px] ">
+          <div className="hidden md:flex justify-center mr-[87px] h-12 ">
             <button
               onClick={handleDownload}
               className="hidden md:block pr-3 bg-blue-300 p-2 rounded-lg"

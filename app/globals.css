@@ -11,3 +11,8 @@
     #adc4ce 10px
   );
 }
+
+.flexTextWrapper {
+  white-space: normal;
+  overflow-wrap: break-word;
+}
