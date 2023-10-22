@@ -10,6 +10,7 @@ import {
   Divider,
   Hero,
   UploadFile,
+  Footer,
 } from "./components/Home";
 import store from "./store";
 export default function Home() {
@@ -61,6 +62,7 @@ export default function Home() {
           <span className="md:pr-16 ">
             <Files />
           </span>
+          <Footer />
         </section>
       </main>
     </Provider>
