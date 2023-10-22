@@ -35,11 +35,13 @@ function UploadFileCard() {
         name: shortenFileName(files[i].name, 30), // Convert and shorten name here
         type: files[i].type,
         size: convertSize(files[i].size),
+        sizeOriginal: files[i].size,
       });
     }
 
     setSelectedFiles(newSelectedFiles);
   };
+  console.log(selectedFiles);
   const handleUpload = async () => {
     const selectedFile = selectedFiles;
     dispatch({ type: "SELECTED_FILE", payload: selectedFile });
@@ -173,7 +175,7 @@ function UploadFileCard() {
         // console.log("Try uploading");
         intervalId = setTimeout(checkProgress, 5000); // Menjalankan kembali checkProgress setiap 5 detik
       } else if (progressSuccess === 1) {
-        console.log("file upload card", progressSuccess);
+        // console.log("file upload card", progressSuccess);
         const dataShare = 1;
         dispatch({ type: "SET_SHARED_VARIABLE", payload: dataShare });
         clearInterval(intervalId); // Menghentikan perulangan jika progressSuccess menjadi 1
@@ -219,8 +221,27 @@ function UploadFileCard() {
           <ul className="mt-2 space-y-1 max-h-[180px] border-2 border-dashed border-[#9DB2BF]  overflow-y-scroll bg-slate-100 rounded-lg p-2">
             {selectedFiles.slice(0, 3).map((file, index) => (
               <li key={index}>
-                <p className="font-semibold">{file.name}</p>
-                <p>Size: {file.size}</p>
+                <p
+                  className={`font-semibold ${
+                    file.sizeOriginal > 50000000
+                      ? "line-through"
+                      : "no-underline"
+                  } `}
+                >
+                  {file.name}
+                </p>
+                <p
+                  className={`${
+                    file.sizeOriginal > 50000000 ? "text-red-500" : "text-black"
+                  } flex justify-between`}
+                >
+                  <span>Size: {file.size}</span>{" "}
+                  {file.sizeOriginal > 50000000 ? (
+                    <span>maximum file size 50MB</span>
+                  ) : (
+                    ""
+                  )}
+                </p>
               </li>
             ))}
             {selectedFiles.length > 3 && (
@@ -233,72 +254,86 @@ function UploadFileCard() {
       )}
       {selectedFiles.length > 0 && (
         <div className="w-full md:w-96 mt-3">
-          <h2 className="text-lg font-medium">Selected Storage:</h2>
-          <span
-            onClick={() => setShowStorageOptions(!showStorageOptions)}
-            className={`flex flex-row justify-between items-center p-2 mt-2 cursor-pointer bg-slate-100 rounded-lg ${
-              showStorageOptions ? "bg-blue-100" : ""
-            }`}
-          >
-            <div className="flex justify-start items-center gap-2">
-              <Image
-                src={"/" + selectedStorage.image}
-                alt={selectedStorage.name}
-                width={40}
-                height={40}
-              />
-              <p>{selectedStorage.name}</p>
-            </div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className={`w-6 h-6 ${
-                showStorageOptions ? "transform rotate-180" : ""
-              }`}
-            >
-              <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-            </svg>
-          </span>
-          {!showStorageOptions && (
-            <ButtonUploadFile
-              handleUpload={handleUpload}
-              startProgress={startProgress}
-            />
-          )}
-          {!showStorageOptions && (
-            <ButtonProgressBar
-              progress={progressBar}
-              progressSuccess={progressSuccess}
-              startProgress={startProgress}
-            />
-          )}
-          {showStorageOptions && (
-            <ul className="mt-2 space-y-2 overflow-auto h-[118px]  overflow-y-scroll bg-slate-100 rounded-lg p-2">
-              {StorageInfo.map((storage, index) => (
-                <li
-                  key={index}
-                  onClick={() => handleFileStorage(storage)}
-                  className={`cursor-pointer ${
-                    selectedStorage === storage ? "font-semibold" : ""
-                  }`}
-                >
-                  <div className="flex justify-start items-center gap-2">
-                    <Image
-                      src={"/" + storage.image}
-                      alt={storage.name}
-                      width={40}
-                      height={40}
+          {selectedFiles.map((file, index) => {
+            if (file.sizeOriginal > 50000000) {
+              console.error(
+                `File ${file.name} terlalu besar. Ukuran maksimum adalah 50MB.`
+              );
+              return <div key={index}></div>;
+            } else {
+              return (
+                <div>
+                  {" "}
+                  <h2 className="text-lg font-medium">Selected Storage:</h2>
+                  <span
+                    onClick={() => setShowStorageOptions(!showStorageOptions)}
+                    className={`flex flex-row justify-between items-center p-2 mt-2 cursor-pointer bg-slate-100 rounded-lg ${
+                      showStorageOptions ? "bg-blue-100" : ""
+                    }`}
+                  >
+                    <div className="flex justify-start items-center gap-2">
+                      <Image
+                        src={"/" + selectedStorage.image}
+                        alt={selectedStorage.name}
+                        width={40}
+                        height={40}
+                      />
+                      <p>{selectedStorage.name}</p>
+                    </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className={`w-6 h-6 ${
+                        showStorageOptions ? "transform rotate-180" : ""
+                      }`}
+                    >
+                      <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                    </svg>
+                  </span>
+                  {!showStorageOptions && (
+                    <ButtonUploadFile
+                      handleUpload={handleUpload}
+                      startProgress={startProgress}
                     />
+                  )}
+                  {!showStorageOptions && (
+                    <ButtonProgressBar
+                      progress={progressBar}
+                      progressSuccess={progressSuccess}
+                      startProgress={startProgress}
+                    />
+                  )}
+                  {showStorageOptions && (
+                    <ul className="mt-2 space-y-2 overflow-auto h-[118px]  overflow-y-scroll bg-slate-100 rounded-lg p-2">
+                      {StorageInfo.map((storage, index) => (
+                        <li
+                          key={index}
+                          onClick={() => handleFileStorage(storage)}
+                          className={`cursor-pointer ${
+                            selectedStorage === storage ? "font-semibold" : ""
+                          }`}
+                        >
+                          <div className="flex justify-start items-center gap-2">
+                            <Image
+                              src={"/" + storage.image}
+                              alt={storage.name}
+                              width={40}
+                              height={40}
+                            />
 
-                    <p>{storage.name}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
+                            <p>{storage.name}</p>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              );
+            }
+          })}
         </div>
       )}
     </div>

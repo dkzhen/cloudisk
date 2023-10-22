@@ -6,3 +6,4 @@ export { default as Storage } from "./Storage";
 export { default as Divider } from "./Divider";
 export { default as UploadFile } from "./UploadFile";
 export { default as Footer } from "./Footer";
+export { default as Info } from "./Info";

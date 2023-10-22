@@ -11,6 +11,7 @@ import {
   Hero,
   UploadFile,
   Footer,
+  Info,
 } from "./components/Home";
 import store from "./store";
 export default function Home() {
@@ -50,6 +51,8 @@ export default function Home() {
         </nav>
         <section className="flex flex-col ml-5 md:ml-28">
           <Hero />
+          <Divider content="Information" id="4" />
+          <Info />
           <Divider content="Upload File" id="3" />
           <UploadFile />
           <Divider
