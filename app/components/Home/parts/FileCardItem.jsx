@@ -38,8 +38,8 @@ function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
               width={40}
               height={40}
             />
-            <div className="flex flex-col  items-start my-3 md:my-0 ">
-              <p className="ml-2  md:ml-4">
+            <div className="flex flex-col  items-start my-3 md:my-0  ">
+              <p className="ml-2  md:ml-4  mr-6">
                 {nameOriginal.length > 30 ? (
                   <>
                     {nameOriginal.slice(0, 30)} {/* 30 karakter pertama */}
