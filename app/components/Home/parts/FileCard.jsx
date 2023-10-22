@@ -100,7 +100,7 @@ function FileCard() {
       <input
         type="search"
         placeholder="Search..."
-        className="flex-grow px-2 h-12 focus:outline-none bg-[#d7e9f4] rounded-md"
+        className="flex-grow px-2 h-12 mt-4 focus:outline-none bg-[#d7e9f4] rounded-md"
         value={searchText}
         onChange={handleSearchChange}
       />
