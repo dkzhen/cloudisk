@@ -9,7 +9,6 @@ import {
   fetchDataFirestore,
 } from "@/utils/functions";
 import { useSelector } from "react-redux";
-import { doc, onSnapshot } from "firebase/firestore";
 
 function FileCard() {
   const [datas, setDatas] = useState([]);

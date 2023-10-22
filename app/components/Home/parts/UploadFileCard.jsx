@@ -41,7 +41,7 @@ function UploadFileCard() {
 
     setSelectedFiles(newSelectedFiles);
   };
-  console.log(selectedFiles);
+
   const handleUpload = async () => {
     const selectedFile = selectedFiles;
     dispatch({ type: "SELECTED_FILE", payload: selectedFile });

@@ -1,3 +1,4 @@
+import { getTypeImage, typeImage } from "@/utils/functions";
 import Image from "next/image";
 import React from "react";
 
@@ -9,10 +10,12 @@ function FileCardItem({ name, size, lastModified, url }) {
     anchor.target = "_blank"; // Menyembunyikan elemen anchor
     anchor.click(); // Simulasi klik pada elemen anchor
   };
+
+  getTypeImage(name);
   return (
-    <div className="flex flex-row items-center justify-between h-12 rounded-md mt-[2px] bg-[#9DB2BF]">
+    <div className="flex flex-row items-center justify-between h-16 rounded-md mt-[2px] bg-[#9DB2BF]">
       <div className="pl-3 flex flex-row gap-3 w-[53%] md:w-[50%]  ">
-        <Image src={"/drive.png"} alt="type" width={30} height={30} />
+        <Image src={`/icons/${typeImage}`} alt="type" width={40} height={40} />
         <p>{name}</p>
       </div>
       <div className="flex flex-row items-center place-items-end justify-center lg:justify-between   md:w-[50%]  ">

@@ -28,4 +28,53 @@ const fetchDataFirestore = async (getDocs, collection, db) => {
   });
   return data;
 };
-export { convertSize, shortenFileName, fetchDataFirestore };
+let typeImage;
+const getTypeImage = (item) => {
+  switch (true) {
+    case /\.png|webp|giv$/.test(item):
+      return (typeImage = `png-canva.png`);
+    case /\.jpg|jpeg|bmp|tiff|heif$/.test(item):
+      return (typeImage = `jpg-canva.png`);
+    case /\.pdf$/.test(item):
+      return (typeImage = `pdf-canva.png`);
+    case /\.doc|docx$/.test(item):
+      return (typeImage = `doc-canva.png`);
+    case /\.txt$/.test(item):
+      return (typeImage = `txt-canva.png`);
+    case /\.xls$/.test(item):
+      return (typeImage = `xls-canva.png`);
+    case /\.xlsx$/.test(item):
+      return (typeImage = `xlsx-canva.png`);
+    case /\.csv$/.test(item):
+      return (typeImage = `csv-canva.png`);
+    case /\.fla$/.test(item):
+      return (typeImage = `fla-canva.png`);
+    case /\.ipynb$/.test(item):
+      return (typeImage = `ipynb-canva.png`);
+    case /\.java$/.test(item):
+      return (typeImage = `java-canva.png`);
+    case /\.mp3$/.test(item):
+      return (typeImage = `mp3-canva.png`);
+    case /\.mp4$/.test(item):
+      return (typeImage = `mp4-canva.png`);
+    case /\.ppt|pptx$/.test(item):
+      return (typeImage = `ppt-canva.png`);
+    case /\.sql$/.test(item):
+      return (typeImage = `sql-canva.png`);
+    case /\.svg$/.test(item):
+      return (typeImage = `svg-canva.png`);
+    case /\.xml$/.test(item):
+      return (typeImage = `xml-canva.png`);
+    case /\.zip|rar|7zip|tar|gz$/.test(item):
+      return (typeImage = `zip-canva.png`);
+    default:
+      return (typeImage = `file-canva.png`);
+  }
+};
+export {
+  convertSize,
+  shortenFileName,
+  fetchDataFirestore,
+  getTypeImage,
+  typeImage,
+};
