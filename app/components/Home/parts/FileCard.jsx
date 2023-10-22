@@ -15,6 +15,8 @@ function FileCard() {
   const [itemsToShow, setItemsToShow] = useState(1);
   const sharedVariable = useSelector((state) => state.sharedVariable);
   const selectedFile = useSelector((state) => state.selectedFile);
+  const [searchText, setSearchText] = useState("");
+  const [searchToShow, setSearchToShow] = useState([]);
 
   useEffect(() => {
     function updateItemsToShow() {
@@ -78,8 +80,31 @@ function FileCard() {
   }, [sharedVariable]);
   // filter datas
 
+  const handleSearchChange = (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    setSearchText(searchTerm);
+
+    // Membersihkan spasi dan tanda baca dari searchTerm
+    const cleanedSearchTerm = searchTerm.replace(/[\W_]+/g, "");
+    // Simpan data yang sesuai dengan pencarian dalam state dataToShow
+    setSearchToShow(
+      datas.filter((item) => {
+        const cleanedName = item.name.toLowerCase().replace(/[\W_]+/g, "");
+        return cleanedName.includes(cleanedSearchTerm);
+      })
+    );
+  };
+
   return (
     <div className="w-full flex flex-col mb-4 ">
+      <input
+        type="search"
+        placeholder="Search..."
+        className="flex-grow px-2 h-12 focus:outline-none bg-[#d7e9f4] rounded-md"
+        value={searchText}
+        onChange={handleSearchChange}
+      />
+
       <div className="flex flex-row items-center justify-between h-8 mt-5 font-bold bg-[#9DB2BF] rounded-md">
         <div className="pl-3 flex flex-row gap-3 w-[50%] md:w-[50%] ">
           <p>Name</p>
@@ -93,15 +118,27 @@ function FileCard() {
         </div>
       </div>
       {datas.length >= 1 ? (
-        datas.map((item, index) => (
-          <FileCardItem
-            key={index}
-            name={shortenFileName(item.name, itemsToShow == 1 ? 14 : 30)}
-            size={convertSize(item.size)}
-            lastModified={item.lastmodified}
-            url={item.url}
-          />
-        ))
+        searchText.length > 0 ? (
+          searchToShow.map((item, index) => (
+            <FileCardItem
+              key={index}
+              name={shortenFileName(item.name, itemsToShow == 1 ? 14 : 30)}
+              size={convertSize(item.size)}
+              lastModified={item.lastmodified}
+              url={item.url}
+            />
+          ))
+        ) : (
+          datas.map((item, index) => (
+            <FileCardItem
+              key={index}
+              name={shortenFileName(item.name, itemsToShow == 1 ? 14 : 30)}
+              size={convertSize(item.size)}
+              lastModified={item.lastmodified}
+              url={item.url}
+            />
+          ))
+        )
       ) : (
         <div className="w-full flex justify-center items-center bg-[#9DB2BF] mt-[2px] rounded-md p-2 mb-4">
           No data available
