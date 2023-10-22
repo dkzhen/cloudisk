@@ -14,7 +14,6 @@ function FileCard() {
   const [datas, setDatas] = useState([]);
   const [itemsToShow, setItemsToShow] = useState(1);
   const sharedVariable = useSelector((state) => state.sharedVariable);
-  const selectedFile = useSelector((state) => state.selectedFile);
   const [searchText, setSearchText] = useState("");
   const [searchToShow, setSearchToShow] = useState([]);
 

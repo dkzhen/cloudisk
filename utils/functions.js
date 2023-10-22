@@ -65,6 +65,8 @@ const getTypeImage = (item) => {
       return (typeImage = `svg-canva.png`);
     case /\.xml$/.test(item):
       return (typeImage = `xml-canva.png`);
+    case /\.cdr$/.test(item):
+      return (typeImage = `cdr-canva.png`);
     case /\.zip|rar|7zip|tar|gz$/.test(item):
       return (typeImage = `zip-canva.png`);
     default:
