@@ -262,7 +262,7 @@ function UploadFileCard() {
               return <div key={index}></div>;
             } else {
               return (
-                <div>
+                <div key={index}>
                   {" "}
                   <h2 className="text-lg font-medium">Selected Storage:</h2>
                   <span
