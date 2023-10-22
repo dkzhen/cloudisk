@@ -123,6 +123,7 @@ function FileCard() {
               key={index}
               name={shortenFileName(item.name, itemsToShow == 1 ? 14 : 30)}
               size={convertSize(item.size)}
+              nameOriginal={item.name}
               lastModified={item.lastmodified}
               url={item.url}
             />
@@ -132,6 +133,7 @@ function FileCard() {
             <FileCardItem
               key={index}
               name={shortenFileName(item.name, itemsToShow == 1 ? 14 : 30)}
+              nameOriginal={item.name}
               size={convertSize(item.size)}
               lastModified={item.lastmodified}
               url={item.url}
