@@ -8,10 +8,10 @@ function NotFound404() {
         <div>
           <p class="text-sm font-medium text-blue-500 ">404 error</p>
           <h1 class="mt-3 text-2xl font-semibold text-gray-800  md:text-3xl">
-            We can’t find that page
+            We cant find that page
           </h1>
           <p class="mt-4 text-gray-500 ">
-            Sorry, the page you are looking for doesn't exist or has been moved.
+            Sorry, the page you are looking for doesnt exist or has been moved.
           </p>
 
           <div class="flex items-center mt-6 gap-x-3">
