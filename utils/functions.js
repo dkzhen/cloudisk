@@ -73,10 +73,52 @@ const getTypeImage = (item) => {
       return (typeImage = `file-canva.png`);
   }
 };
+
+import { useEffect } from "react";
+// sm :1 ,md :2 ,lg :3
+const responsiveDesign = (setItemsToShow) => {
+  useEffect(() => {
+    function updateItemsToShow() {
+      if (window.innerWidth >= 1024) {
+        setItemsToShow(3);
+      } else if (window.innerWidth >= 768) {
+        setItemsToShow(2);
+      } else {
+        setItemsToShow(1);
+      }
+    }
+
+    updateItemsToShow();
+    window.addEventListener("resize", updateItemsToShow);
+
+    return () => {
+      window.removeEventListener("resize", updateItemsToShow);
+    };
+  }, []);
+};
+
+const onScrolling = (setScrolling) => {
+  const handleScroll = () => {
+    if (window.scrollY > 0) {
+      setScrolling(true);
+    } else {
+      setScrolling(false);
+    }
+  };
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+};
+
 export {
   convertSize,
   shortenFileName,
   fetchDataFirestore,
   getTypeImage,
   typeImage,
+  responsiveDesign,
+  onScrolling,
 };

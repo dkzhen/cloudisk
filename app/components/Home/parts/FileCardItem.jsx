@@ -1,10 +1,32 @@
-import { getTypeImage, shortenFileName, typeImage } from "@/utils/functions";
+import { getTypeImage, typeImage, responsiveDesign } from "@/utils/functions";
 import Image from "next/image";
-
+import { motion } from "framer-motion";
 import React, { useState } from "react";
 
 function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [itemsToShow, setItemsToShow] = useState(1);
+
+  responsiveDesign(setItemsToShow);
+
+  let heightVariants;
+  if (itemsToShow == 1) {
+    heightVariants = "100%";
+  } else {
+    heightVariants = "6rem";
+  }
+
+  const variants = {
+    open: { height: heightVariants }, // h-full
+    closed: { height: "4rem" }, // h-16
+  };
+
+  const transition = {
+    type: "spring",
+    damping: 30, // Mengurangi nilai ini untuk animasi yang lebih lambat
+    stiffness: 170, // Mengurangi nilai ini untuk animasi yang lebih lambat
+    duration: 0.5, // Menambahkan durasi animasi
+  };
 
   const handleDownload = () => {
     const anchor = document.createElement("a");
@@ -21,7 +43,11 @@ function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
   getTypeImage(name);
 
   return (
-    <div
+    <motion.div
+      initial="closed"
+      animate={isExpanded ? "open" : "closed"}
+      variants={variants}
+      transition={transition}
       className={`flex flex-row items-center justify-between ${
         isExpanded ? "h-full md:h-24 " : "h-16"
       }
@@ -104,7 +130,7 @@ function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
           </div>
         </>
       )}
-    </div>
+    </motion.div>
   );
 }
 

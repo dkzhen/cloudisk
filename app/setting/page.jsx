@@ -4,7 +4,7 @@ import { SideBar, Navbar } from "../components/Home";
 import { onScrolling } from "@/utils/functions";
 import NotFound404 from "../components/NotFound404";
 
-function Stat() {
+function Setting() {
   const [scrolling, setScrolling] = useState(false);
   const [navClick, setnavClick] = useState(false);
 
@@ -33,4 +33,4 @@ function Stat() {
   );
 }
 
-export default Stat;
+export default Setting;

@@ -14,27 +14,21 @@ import {
   Info,
 } from "./components/Home";
 import store from "./store";
+import { onScrolling } from "@/utils/functions";
 export default function Home() {
   const [scrolling, setScrolling] = useState(false);
   const [dataDivider, setDataDivider] = useState("0");
+  const [navClick, setnavClick] = useState(false);
 
-  const handleScroll = () => {
-    if (window.scrollY > 0) {
-      setScrolling(true);
-    } else {
-      setScrolling(false);
-    }
-  };
+  onScrolling(setScrolling);
+
   const handleDividerReceived = (data) => {
     setDataDivider(data);
   };
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const handleClick = () => {
+    setnavClick(!navClick);
+  };
 
   return (
     <Provider store={store}>
@@ -43,11 +37,11 @@ export default function Home() {
           <SideBar />
         </aside>
         <nav
-          className={`sticky top-0 bg-white h-14 md:h-0 ${
-            scrolling ? "pt-[4px] md:pt-0" : ""
-          } `}
+          className={`sticky top-0 ${
+            navClick == false ? "bg-white" : "bg-[#eff2f4] pt-2"
+          } h-14 md:h-0 ${scrolling ? "pt-[4px] md:pt-0" : ""} `}
         >
-          <Navbar />
+          <Navbar handleClickNav={handleClick} nav={navClick} />
         </nav>
         <section className="flex flex-col ml-5 md:ml-28">
           <Hero />

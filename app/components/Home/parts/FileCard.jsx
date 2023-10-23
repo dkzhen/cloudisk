@@ -7,6 +7,7 @@ import {
   shortenFileName,
   convertSize,
   fetchDataFirestore,
+  responsiveDesign,
 } from "@/utils/functions";
 import { useSelector } from "react-redux";
 
@@ -17,24 +18,8 @@ function FileCard() {
   const [searchText, setSearchText] = useState("");
   const [searchToShow, setSearchToShow] = useState([]);
 
-  useEffect(() => {
-    function updateItemsToShow() {
-      if (window.innerWidth >= 1024) {
-        setItemsToShow(3);
-      } else if (window.innerWidth >= 768) {
-        setItemsToShow(2);
-      } else {
-        setItemsToShow(1);
-      }
-    }
-
-    updateItemsToShow();
-    window.addEventListener("resize", updateItemsToShow);
-
-    return () => {
-      window.removeEventListener("resize", updateItemsToShow);
-    };
-  }, []);
+  // responsive design
+  responsiveDesign(setItemsToShow);
 
   useEffect(() => {
     const getData = async () => {
