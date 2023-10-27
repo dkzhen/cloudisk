@@ -17,17 +17,20 @@ function UploadFileCard() {
   const [progressBar, setProgressBar] = useState(0);
   const [progressSuccess, setProgressSuccess] = useState(0);
   const [startProgress, setStartProgress] = useState(0);
+  const [maxSizeFile, setMaxSizeFile] = useState("low");
   const dispatch = useDispatch();
+  const maxSize = 50000000;
 
   const handleFileStorage = (storage) => {
     setSelectedStorage(storage);
     setShowStorageOptions(false);
   };
   const handleFileChange = (event) => {
+    setMaxSizeFile("low");
     setProgressSuccess(0);
     setFiles(event.target.files);
     const files = event.target.files;
-    console.log("upload File Card", files);
+    // console.log("upload File Card", files);
     const newSelectedFiles = [];
 
     for (let i = 0; i < files.length; i++) {
@@ -40,6 +43,9 @@ function UploadFileCard() {
     }
 
     setSelectedFiles(newSelectedFiles);
+    if (newSelectedFiles.some((file) => file.sizeOriginal > maxSize)) {
+      setMaxSizeFile("high");
+    }
   };
 
   const handleUpload = async () => {
@@ -223,7 +229,7 @@ function UploadFileCard() {
               <li key={index}>
                 <p
                   className={`font-semibold ${
-                    file.sizeOriginal > 50000000
+                    file.sizeOriginal > maxSize
                       ? "line-through"
                       : "no-underline"
                   } `}
@@ -232,11 +238,11 @@ function UploadFileCard() {
                 </p>
                 <p
                   className={`${
-                    file.sizeOriginal > 50000000 ? "text-red-500" : "text-black"
+                    file.sizeOriginal > maxSize ? "text-red-500" : "text-black"
                   } flex justify-between`}
                 >
                   <span>Size: {file.size}</span>{" "}
-                  {file.sizeOriginal > 50000000 ? (
+                  {file.sizeOriginal > maxSize ? (
                     <span>maximum file size 50MB</span>
                   ) : (
                     ""
@@ -255,85 +261,95 @@ function UploadFileCard() {
       {selectedFiles.length > 0 && (
         <div className="w-full md:w-96 mt-3">
           {selectedFiles.map((file, index) => {
-            if (file.sizeOriginal > 50000000) {
+            if (file.sizeOriginal > maxSize) {
               console.error(
                 `File ${file.name} terlalu besar. Ukuran maksimum adalah 50MB.`
               );
-              return <div key={index}></div>;
-            } else {
               return (
                 <div key={index}>
-                  {" "}
-                  <h2 className="text-lg font-medium">Selected Storage:</h2>
-                  <span
-                    onClick={() => setShowStorageOptions(!showStorageOptions)}
-                    className={`flex flex-row justify-between items-center p-2 mt-2 cursor-pointer bg-slate-100 rounded-lg ${
-                      showStorageOptions ? "bg-blue-100" : ""
-                    }`}
-                  >
-                    <div className="flex justify-start items-center gap-2">
-                      <Image
-                        src={"/" + selectedStorage.image}
-                        alt={selectedStorage.name}
-                        width={40}
-                        height={40}
-                      />
-                      <p>{selectedStorage.name}</p>
-                    </div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className={`w-6 h-6 ${
-                        showStorageOptions ? "transform rotate-180" : ""
-                      }`}
-                    >
-                      <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                    </svg>
-                  </span>
-                  {!showStorageOptions && (
-                    <ButtonUploadFile
-                      handleUpload={handleUpload}
-                      startProgress={startProgress}
-                    />
-                  )}
-                  {!showStorageOptions && (
-                    <ButtonProgressBar
-                      progress={progressBar}
-                      progressSuccess={progressSuccess}
-                      startProgress={startProgress}
-                    />
-                  )}
-                  {showStorageOptions && (
-                    <ul className="mt-2 space-y-2 overflow-auto h-[118px]  overflow-y-scroll bg-slate-100 rounded-lg p-2">
-                      {StorageInfo.map((storage, index) => (
-                        <li
-                          key={index}
-                          onClick={() => handleFileStorage(storage)}
-                          className={`cursor-pointer ${
-                            selectedStorage === storage ? "font-semibold" : ""
-                          }`}
-                        >
-                          <div className="flex justify-start items-center gap-2">
-                            <Image
-                              src={"/" + storage.image}
-                              alt={storage.name}
-                              width={40}
-                              height={40}
-                            />
-
-                            <p>{storage.name}</p>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  {/* Display an error message for files larger than 50MB */}
+                  <p>
+                    {/* Error: File {file.name} is too large. Maximum size is 50MB. */}
+                  </p>
                 </div>
               );
             }
+            // No return statement here to skip files that meet the else condition.
           })}
+
+          {/* Upload code goes here (outside of the map function) */}
+          <div>
+            {/* Your code for uploading files that are not larger than 50MB */}
+            <div className={`${maxSizeFile == "low" ? "block" : "hidden"}`}>
+              {" "}
+              <h2 className="text-lg font-medium">Selected Storage:</h2>
+              <span
+                onClick={() => setShowStorageOptions(!showStorageOptions)}
+                className={`flex flex-row justify-between items-center p-2 mt-2 cursor-pointer bg-slate-100 rounded-lg ${
+                  showStorageOptions ? "bg-blue-100" : ""
+                }`}
+              >
+                <div className="flex justify-start items-center gap-2">
+                  <Image
+                    src={"/" + selectedStorage.image}
+                    alt={selectedStorage.name}
+                    width={40}
+                    height={40}
+                  />
+                  <p>{selectedStorage.name}</p>
+                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className={`w-6 h-6 ${
+                    showStorageOptions ? "transform rotate-180" : ""
+                  }`}
+                >
+                  <path d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </span>
+              {!showStorageOptions && (
+                <ButtonUploadFile
+                  handleUpload={handleUpload}
+                  startProgress={startProgress}
+                />
+              )}
+              {!showStorageOptions && (
+                <ButtonProgressBar
+                  progress={progressBar}
+                  progressSuccess={progressSuccess}
+                  startProgress={startProgress}
+                />
+              )}
+              {showStorageOptions && (
+                <ul className="mt-2 space-y-2 overflow-auto h-[118px]  overflow-y-scroll bg-slate-100 rounded-lg p-2">
+                  {StorageInfo.map((storage, index) => (
+                    <li
+                      key={index}
+                      onClick={() => handleFileStorage(storage)}
+                      className={`cursor-pointer ${
+                        selectedStorage === storage ? "font-semibold" : ""
+                      }`}
+                    >
+                      <div className="flex justify-start items-center gap-2">
+                        <Image
+                          src={"/" + storage.image}
+                          alt={storage.name}
+                          width={40}
+                          height={40}
+                        />
+
+                        <p>{storage.name}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </div>
         </div>
       )}
     </div>

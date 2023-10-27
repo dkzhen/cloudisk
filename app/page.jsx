@@ -1,7 +1,6 @@
 "use client";
-
 import { Provider } from "react-redux";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Navbar,
   SideBar,

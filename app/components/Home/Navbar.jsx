@@ -55,7 +55,7 @@ export default function Navbar({ handleClickNav, nav }) {
           >
             <div className="ml-4 space-y-3 flex flex-col">
               <Link href={"/"}>Home</Link>
-              <Link href={"/setting"}>Setting</Link>
+              <Link href={"/pro"}>Premium</Link>
               <Link href={"/stat"}>Stat</Link>
             </div>
           </motion.div>

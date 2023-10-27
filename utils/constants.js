@@ -1,6 +1,6 @@
 const LogoSideBar = [
   { path: "/", image: "home.svg" },
-  { path: "/setting", image: "setting.svg" },
+  { path: "/pro", image: "setting.svg" },
   { path: "/stat", image: "stat.svg" },
 ];
 const StorageInfo = [

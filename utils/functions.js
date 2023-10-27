@@ -113,6 +113,14 @@ const onScrolling = (setScrolling) => {
   }, []);
 };
 
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
+let sessionProvider;
+const ServerSession = async () => {
+  sessionProvider = await getServerSession(authOptions);
+  return sessionProvider;
+};
+
 export {
   convertSize,
   shortenFileName,
