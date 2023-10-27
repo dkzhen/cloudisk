@@ -1,5 +1,4 @@
 import NextAuth from "next-auth";
-import { getToken } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions = NextAuth({
