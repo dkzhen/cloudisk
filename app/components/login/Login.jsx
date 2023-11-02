@@ -2,86 +2,148 @@
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 export default function Login() {
+  const auth = getAuth();
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const [loadingGoogle, setLoadingGoogle] = useState(false);
+  const [loadingEmail, setLoadingEmail] = useState(false);
+  const [statusError, setStatusError] = useState("");
+  const handleButtonGoogle = () => {
+    setLoadingGoogle(true);
+    signIn("google").then(() => {
+      setLoadingGoogle(false);
+    });
+  };
+  const handleButtonClick = () => {
+    setLoadingEmail(true);
+    signInWithEmailAndPassword(auth, email, pass)
+      .then((userCredential) => {
+        console.log("Login successfully");
+        setLoadingEmail(false);
+      })
+      .catch((error) => {
+        setStatusError(error.code);
+        setLoadingEmail(false);
+        setTimeout(() => {
+          setStatusError("");
+        }, 5000);
+      });
+  };
+  //
   return (
-    <>
-      <div className="fixed grid place-items-center backdrop-blur-sm top-0 right-0 left-0 z-50 w-full inset-0 h-modal h-full justify-center items-center">
-        <div className="relative container m-auto px-6">
-          <div className="m-auto md:w-7/12">
-            <div className="rounded-xl bg-white dark:bg-gray-800 shadow-xl">
-              <div className="p-8">
-                <div className="space-y-4">
-                  <Image
-                    src="https://www.svgrepo.com/show/475643/dribbble-color.svg"
-                    loading="lazy"
-                    className="w-10"
-                    width={0}
-                    height={0}
-                    alt="logo"
-                  />
-                  <h2 className="mb-8 text-2xl text-cyan-900 dark:text-white font-bold">
-                    Log in to unlock the premium features.
-                  </h2>
+    <div className="fixed grid place-items-center backdrop-blur-sm top-0 right-0 left-0 z-50 w-full inset-0 h-modal h-full justify-center items-center">
+      <div className="relative container m-auto px-6">
+        <div className="m-auto md:w-7/12">
+          <div className="rounded-xl bg-white dark:bg-gray-800 shadow-xl">
+            <div className="p-8">
+              <div className="space-y-4">
+                <Image
+                  src="https://www.svgrepo.com/show/475643/dribbble-color.svg"
+                  loading="lazy"
+                  className="w-10"
+                  width={0}
+                  height={0}
+                  alt="logo"
+                />
+                <h2 className="md:mb-8 text-2xl text-cyan-900 dark:text-white font-bold">
+                  Log in to unlock the premium features.
+                </h2>
+              </div>
+              <div className="mt-5 md:mt-10 grid space-y-2 md:space-y-4">
+                <button
+                  onClick={handleButtonGoogle}
+                  className="group h-12 px-6 border-2 mb-5 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100"
+                >
+                  <div className="relative flex items-center space-x-4 justify-center">
+                    <Image
+                      src="https://www.svgrepo.com/show/475656/google-color.svg"
+                      className="absolute left-0 w-5"
+                      alt="google logo"
+                      width={0}
+                      height={0}
+                    />
+                    <span className="block w-max font-semibold tracking-wide text-white text-sm transition duration-300 group-hover:text-blue-600 group-focus:text-blue-600 group-active:text-blue-600  sm:text-base">
+                      {loadingGoogle ? "Loading..." : "Continue with Google"}
+                    </span>
+                  </div>
+                </button>
+                <h2 className="mb-8 text-xl text-white  font-bold">
+                  Log in account
+                </h2>
+
+                <div className="w-full">
+                  <div className="text-red-600 -mt-3 pb-3">
+                    {statusError === "auth/invalid-email"
+                      ? "Invalid Email"
+                      : statusError === "auth/user-not-found"
+                      ? "User not found"
+                      : statusError === "auth/wrong-password"
+                      ? "Wrong password"
+                      : ""}
+                  </div>
+                  <div className="relative h-10 w-full min-w-[200px]">
+                    <input
+                      type="email"
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="peer h-full w-full rounded-[7px] border border-blue-gray-200  border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-white   outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-white placeholder-shown:border-t-white focus:border-2 focus:border-blue-600 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+                      placeholder=" "
+                    />
+                    <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-white transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-white peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-blue-600 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-blue-600 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-white">
+                      Email
+                    </label>
+                  </div>
                 </div>
-                <div className="mt-10 grid space-y-4">
-                  <button
-                    onClick={() => signIn("google")}
-                    className="group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100"
-                  >
-                    <div className="relative flex items-center space-x-4 justify-center">
-                      <Image
-                        src="https://www.svgrepo.com/show/475656/google-color.svg"
-                        className="absolute left-0 w-5"
-                        alt="google logo"
-                        width={0}
-                        height={0}
-                      />
-                      <span className="block w-max font-semibold tracking-wide text-gray-700 dark:text-white text-sm transition duration-300 group-hover:text-blue-600 sm:text-base">
-                        Continue with Google
-                      </span>
-                    </div>
-                  </button>
-                  <Link
-                    href={"/"}
-                    className="group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 flex items-center justify-center focus:bg-blue-50 active:bg-blue-100"
-                  >
-                    <div className="relative flex items-center space-x-4 justify-center">
-                      <span className="block w-max font-semibold tracking-wide text-gray-700 dark:text-white text-sm transition duration-300 group-hover:text-blue-600 sm:text-base">
-                        Back to Home
-                      </span>
-                    </div>
-                  </Link>
-                  {/* github */}
-                  {/* <button className="group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100">
-                    <div className="relative flex items-center space-x-4 justify-center">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        className="absolute left-0 w-5 text-gray-700"
-                        viewBox="0 0 16 16"
-                      >
-                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
-                      </svg>
-                      <span className="block w-max font-semibold tracking-wide text-gray-700 text-sm transition dark:text-white duration-300 group-hover:text-blue-600 sm:text-base">
-                        Continue with Github
-                      </span>
-                    </div>
-                  </button> */}
+                <div className="w-full">
+                  <div className="relative h-10 w-full min-w-[200px]">
+                    <input
+                      type="password"
+                      className="peer h-full w-full rounded-[7px] border border-blue-gray-200  border-t-transparent bg-transparent px-3 py-2.5 font-sans text-sm font-normal text-white   outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-white placeholder-shown:border-t-white focus:border-2 focus:border-blue-600 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+                      placeholder=" "
+                      onChange={(e) => setPass(e.target.value)}
+                    />
+                    <label className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[11px] font-normal leading-tight text-white transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t before:border-l before:border-blue-gray-200 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t after:border-r after:border-blue-gray-200 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-white peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-blue-600 peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-blue-600 peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-blue-600 peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-white">
+                      Password
+                    </label>
+                  </div>
                 </div>
-                <div className="mt-14 space-y-4 py-3 text-gray-600 dark:text-gray-400 text-center">
-                  <p className="text-xs">
-                    By continuing, you agree to our risks and our rules. This
-                    space only superusers can log in. Created 2023 - All
-                    Reserved Designed by Zhen.
-                  </p>
-                </div>
+
+                <button
+                  onClick={handleButtonClick}
+                  className="group  h-10 px-3 border-2 border-gray-300 rounded-lg transition duration-300 hover:border-blue-400 flex items-center justify-center focus:bg-blue-50 active:bg-blue-100"
+                >
+                  <div className="relative flex items-center space-x-4 justify-center">
+                    <span className="block w-max font-semibold tracking-wide text-white text-sm transition duration-300 group-hover:text-blue-600 sm:text-base group-focus:text-blue-600 group-active:text-blue-600">
+                      {loadingEmail ? "Loading.." : "Log in"}
+                    </span>
+                  </div>
+                </button>
+                <div className="h-2"></div>
+                <Link
+                  href={"/"}
+                  className="group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 flex items-center justify-center focus:bg-blue-50 active:bg-blue-100"
+                >
+                  <div className="relative flex items-center space-x-4 justify-center">
+                    <span className="block w-max font-semibold tracking-wide text-gray-700 dark:text-white text-sm transition duration-300 group-hover:text-blue-600 sm:text-base">
+                      Back to Home
+                    </span>
+                  </div>
+                </Link>
+              </div>
+              <div className="mt-5 space-y-4 py-3 text-gray-600 dark:text-gray-400 text-center">
+                <p className="text-xs">
+                  By continuing, you agree to our risks and our rules. This
+                  space only superusers can log in. Created 2023 - All Reserved
+                  Designed by Zhen.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }

@@ -6,7 +6,7 @@ import { createStore } from "redux";
 const initialState = {
   sharedVariable: null,
   selectedFile: [],
-  sessionName: null,
+  sessionStatus: [],
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -21,10 +21,10 @@ const rootReducer = (state = initialState, action) => {
         ...state,
         selectedFile: action.payload,
       };
-    case "SESSION_NAME":
+    case "SESSION_STATUS":
       return {
         ...state,
-        sessionName: action.payload,
+        sessionStatus: action.payload,
       };
     default:
       return state;

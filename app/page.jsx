@@ -17,7 +17,7 @@ import { onScrolling } from "@/utils/functions";
 export default function Home() {
   const [scrolling, setScrolling] = useState(false);
   const [dataDivider, setDataDivider] = useState("0");
-  const [navClick, setnavClick] = useState(false);
+  const [navClick, setNavClick] = useState(false);
 
   onScrolling(setScrolling);
 
@@ -26,7 +26,7 @@ export default function Home() {
   };
 
   const handleClick = () => {
-    setnavClick(!navClick);
+    setNavClick(!navClick);
   };
 
   return (
@@ -37,7 +37,7 @@ export default function Home() {
         </aside>
         <nav
           className={`sticky top-0 ${
-            navClick == false ? "bg-white" : "bg-[#eff2f4] pt-2"
+            !navClick ? "bg-white" : "bg-[#eff2f4] pt-2"
           } h-14 md:h-0 ${scrolling ? "pt-[4px] md:pt-0" : ""} `}
         >
           <Navbar handleClickNav={handleClick} nav={navClick} />
