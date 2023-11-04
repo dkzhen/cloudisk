@@ -32,7 +32,7 @@ function FileProItem({ nameOriginal, url, size, lastModified, docID }) {
             width={30}
             height={30}
           />
-          <div className="">{nameOriginal}</div>
+          <div className="h-full w-[75%] overflow-hidden">{nameOriginal}</div>
         </div>
         <div className="flex flex-row justify-between space-x-3 items-center  w-[25%] md:mr-5  ">
           <div className="ml-5 hidden md:block">{lastModified}</div>
