@@ -1,14 +1,14 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import { db } from "@/config/FirebaseConfig";
-import { collection, getDocs } from "firebase/firestore/lite";
-import { convertSize, fetchDataFirestore } from "@/utils/functions";
+import { convertSize } from "@/app/utils/functions";
+import { fetchDataFirestore } from "@/app/api/controllers/Firestore";
 
 function StorageCard({ name, capacity, type, image, id }) {
   const [datas, setDatas] = useState([]);
   useEffect(() => {
     const getData = async () => {
-      const dataFirestore = await fetchDataFirestore(getDocs, collection, db);
+      const ref = "images";
+      const dataFirestore = await fetchDataFirestore(ref);
       setDatas(dataFirestore);
     };
     getData();

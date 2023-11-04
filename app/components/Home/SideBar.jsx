@@ -1,6 +1,6 @@
 import React from "react";
-import Icon from "./parts/Icon";
-import { LogoSideBar } from "@/utils/constants";
+import Icon from "./partials/Icon";
+import { LogoSideBar } from "@/app/utils/constants";
 
 function SideBar() {
   return (

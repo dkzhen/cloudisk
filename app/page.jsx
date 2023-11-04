@@ -12,8 +12,8 @@ import {
   Footer,
   Info,
 } from "./components/Home";
-import store from "./store";
-import { onScrolling } from "@/utils/functions";
+import store from "./utils/ReduxStore";
+import { onScrolling } from "@/app/utils/functions";
 export default function Home() {
   const [scrolling, setScrolling] = useState(false);
   const [dataDivider, setDataDivider] = useState("0");

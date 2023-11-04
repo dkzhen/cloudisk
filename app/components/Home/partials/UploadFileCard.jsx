@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { StorageInfo } from "@/utils/constants";
+import { StorageInfo } from "@/app/utils/constants";
 import ButtonUploadFile from "./ButtonUploadFile";
-import { convertSize, shortenFileName } from "@/utils/functions";
+import { convertSize, shortenFileName } from "@/app/utils/functions";
 import ButtonProgressBar from "./ButtonProgressBar";
-import { db, storage } from "@/config/FirebaseConfig";
+import { storage } from "@/app/api/config/FirebaseConfig";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { collection, addDoc } from "firebase/firestore/lite";
 import Image from "next/image";
 import { useDispatch } from "react-redux";
+import { getLimit } from "@/app/api/controllers/LimitUpload";
+import { writeDataFirestore } from "@/app/api/controllers/Firestore";
 
 function UploadFileCard() {
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -18,8 +19,29 @@ function UploadFileCard() {
   const [progressSuccess, setProgressSuccess] = useState(0);
   const [startProgress, setStartProgress] = useState(0);
   const [maxSizeFile, setMaxSizeFile] = useState("low");
+  const [limit, setLimit] = useState(null);
   const dispatch = useDispatch();
-  const maxSize = 50000000;
+  const maxSize = limit === 50 ? 50000000 : 1073741824;
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await getLimit(1);
+        // Gunakan data di sini
+        setLimit(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    const interval = setInterval(() => {
+      fetchData(); // Mengambil data secara berkala
+    }, 1000); // Contoh polling setiap 5 detik
+
+    return () => {
+      clearInterval(interval); // Membersihkan interval saat komponen tidak lagi digunakan
+    };
+  }, []);
 
   const handleFileStorage = (storage) => {
     setSelectedStorage(storage);
@@ -30,15 +52,14 @@ function UploadFileCard() {
     setProgressSuccess(0);
     setFiles(event.target.files);
     const files = event.target.files;
-    // console.log("upload File Card", files);
     const newSelectedFiles = [];
 
-    for (let i = 0; i < files.length; i++) {
+    for (const element of files) {
       newSelectedFiles.push({
-        name: shortenFileName(files[i].name, 30), // Convert and shorten name here
-        type: files[i].type,
-        size: convertSize(files[i].size),
-        sizeOriginal: files[i].size,
+        name: shortenFileName(element.name, 30), // Convert and shorten name here
+        type: element.type,
+        size: convertSize(element.size),
+        sizeOriginal: element.size,
       });
     }
 
@@ -68,6 +89,7 @@ function UploadFileCard() {
         const metadata = {
           contentType: file.type,
         };
+        // upload storage
         const storageRef = ref(storage, "images/" + file.name);
         const uploadTask = uploadBytesResumable(storageRef, file, metadata);
 
@@ -80,64 +102,27 @@ function UploadFileCard() {
               (individualProgress + index * 100) / files.length;
             console.log("Total Upload Progress: " + totalProgress + "%");
             setProgressBar(Math.floor(totalProgress));
-            switch (snapshot.state) {
-              case "paused":
-                // console.log("Upload is paused");
-                break;
-              case "running":
-                // console.log("Upload is running");
-                break;
-            }
           },
           (error) => {
-            switch (error.code) {
-              case "storage/unauthorized":
-                console.log("Upload is unauthorized");
-                // User doesn't have permission to access the object
-                break;
-              case "storage/canceled":
-                console.log("Upload is canceled");
-                // User canceled the upload
-                break;
-              case "storage/unknown":
-                console.log("Upload is unknown");
-                // Unknown error occurred, inspect error.serverResponse
-                break;
-              case "storage/no-default-bucket":
-                console.error("Upload is bucket default not found");
-
-                break;
-            }
+            console.log("Error: ", error.code);
           },
           () => {
             const fileLength = files.length;
             if (files[fileLength - 1].name === file.name) {
               setProgressSuccess(1);
-
-              // console.log("Upload success for file: " + file.name);
             }
             setProgressBar(0);
             getDownloadURL(uploadTask.snapshot.ref)
               .then(async (downloadURL) => {
-                // console.log("File available at", downloadURL);
                 try {
-                  const datenow = new Date();
-                  const dateFormatOptions = {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  };
-                  const formattedDate = datenow.toLocaleDateString(
-                    "en-US",
-                    dateFormatOptions
+                  // from controller
+                  const docRef = "images";
+                  await writeDataFirestore(
+                    file.name,
+                    downloadURL,
+                    file.size,
+                    docRef
                   );
-                  const docRef = await addDoc(collection(db, "images"), {
-                    name: file.name,
-                    url: downloadURL,
-                    size: file.size,
-                    lastmodified: formattedDate,
-                  });
-                  // console.log("Document written with ID: ", docRef.id);
                 } catch (e) {
                   console.error("Error adding document: ", e);
                 }
@@ -146,24 +131,7 @@ function UploadFileCard() {
                 uploadFileAtIndex(index + 1);
               })
               .catch((error) => {
-                switch (error.code) {
-                  case "storage/object-not-found":
-                    console.log("error storage object not found");
-                    // File doesn't exist
-                    break;
-                  case "storage/unauthorized":
-                    console.log("error storage object unauthorized");
-                    // User doesn't have permission to access the object
-                    break;
-                  case "storage/canceled":
-                    // User canceled the upload
-                    console.log("error storage object canceled");
-                    break;
-                  case "storage/unknown":
-                    // Unknown error occurred, inspect the server response
-                    console.log("error storage object unknown");
-                    break;
-                }
+                console.log("Error: ", error.code);
               });
           }
         );
@@ -178,10 +146,8 @@ function UploadFileCard() {
 
     const checkProgress = () => {
       if (progressSuccess === 0) {
-        // console.log("Try uploading");
         intervalId = setTimeout(checkProgress, 5000); // Menjalankan kembali checkProgress setiap 5 detik
       } else if (progressSuccess === 1) {
-        // console.log("file upload card", progressSuccess);
         const dataShare = 1;
         dispatch({ type: "SET_SHARED_VARIABLE", payload: dataShare });
         clearInterval(intervalId); // Menghentikan perulangan jika progressSuccess menjadi 1

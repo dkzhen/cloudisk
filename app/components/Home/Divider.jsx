@@ -1,5 +1,5 @@
 "use client";
-import { StorageInfo } from "@/utils/constants";
+import { StorageInfo } from "@/app/utils/constants";
 import React, { useState } from "react";
 
 function Divider({ content, id, dataDivider }) {

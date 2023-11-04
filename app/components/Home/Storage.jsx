@@ -1,8 +1,8 @@
 "use client";
 import React, { useState } from "react";
-import StorageCard from "./parts/StorageCard";
-import { StorageInfo } from "@/utils/constants";
-import { responsiveDesign } from "@/utils/functions";
+import StorageCard from "./partials/StorageCard";
+import { StorageInfo } from "@/app/utils/constants";
+import { responsiveDesign } from "@/app/utils/functions";
 function Storage({ dataReceived }) {
   const [itemsToShow, setItemsToShow] = useState(1);
 
@@ -17,9 +17,9 @@ function Storage({ dataReceived }) {
       } md:gap-10 gap-4 mt-5`}
     >
       {dataReceived == 1
-        ? StorageInfo.map((storage, index) => (
+        ? StorageInfo.map((storage) => (
             <StorageCard
-              key={index}
+              key={storage.id}
               name={storage.name}
               capacity={storage.capacity}
               type={storage.type}
@@ -27,9 +27,9 @@ function Storage({ dataReceived }) {
               id={storage.id}
             />
           ))
-        : StorageInfo.slice(0, itemsToShow).map((storage, index) => (
+        : StorageInfo.slice(0, itemsToShow).map((storage) => (
             <StorageCard
-              key={index}
+              key={storage.id}
               name={storage.name}
               capacity={storage.capacity}
               type={storage.type}

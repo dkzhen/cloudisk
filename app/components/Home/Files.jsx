@@ -1,5 +1,5 @@
 import React from "react";
-import FileCard from "./parts/FileCard";
+import FileCard from "./partials/FileCard";
 
 function Files() {
   return (

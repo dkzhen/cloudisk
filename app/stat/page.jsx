@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { SideBar, Navbar } from "../components/Home";
-import { onScrolling } from "@/utils/functions";
+import { onScrolling } from "@/app/utils/functions";
 import NotFound404 from "../components/NotFound404";
 
 function Stat() {

@@ -1,33 +1,35 @@
-import { getTypeImage, typeImage, responsiveDesign } from "@/utils/functions";
+import { getTypeImage, responsiveDesign } from "@/app/utils/functions";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
 
-function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
+function FileCardItem({ name, size, lastModified, url, nameOriginal, docID }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [itemsToShow, setItemsToShow] = useState(1);
 
+  //resposive design
   responsiveDesign(setItemsToShow);
 
+  // motion div
   let heightVariants;
   if (itemsToShow == 1) {
-    heightVariants = "100%";
+    heightVariants = "100%"; // h-full
   } else {
-    heightVariants = "6rem";
+    heightVariants = "6rem"; // h-24
   }
-
   const variants = {
     open: { height: heightVariants }, // h-full
     closed: { height: "4rem" }, // h-16
   };
-
   const transition = {
     type: "spring",
     damping: 30, // Mengurangi nilai ini untuk animasi yang lebih lambat
     stiffness: 170, // Mengurangi nilai ini untuk animasi yang lebih lambat
     duration: 0.5, // Menambahkan durasi animasi
   };
+  // end motion div
 
+  //handle download file
   const handleDownload = () => {
     const anchor = document.createElement("a");
     anchor.href = url;
@@ -35,14 +37,19 @@ function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
     anchor.target = "_blank"; // Menyembunyikan elemen anchor
     anchor.click(); // Simulasi klik pada elemen anchor
   };
+  // end handle download file
 
+  // handle wrap div file
   const handleWrap = () => {
     setIsExpanded(!isExpanded); // Toggle state isExpanded
   };
+  // end handle wrap div file
 
-  getTypeImage(name);
+  // type extension file
+  let typeImage = getTypeImage(name); // function returns type image
 
   return (
+    //motion start
     <motion.div
       initial="closed"
       animate={isExpanded ? "open" : "closed"}
@@ -78,13 +85,13 @@ function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
               </p>
 
               <div className="md:flex md:flex-row md:justify-between md:items-center md:space-x-4 md:ml-4 ml-2">
-                <p>Size: {size}</p>
-                <p>Date: {lastModified}</p>
+                <div>Size: {size}</div>
+                <div>Date: {lastModified}</div>
                 <button
                   onClick={handleDownload}
                   className="block md:hidden mt-2 pr-3 bg-blue-300 p-2 rounded-lg"
                 >
-                  Download{" "}
+                  {"Download"}{" "}
                 </button>
               </div>
             </div>
@@ -94,15 +101,16 @@ function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
               onClick={handleDownload}
               className="hidden md:block pr-3 bg-blue-300 p-2 rounded-lg"
             >
-              Download
+              {"Download"}
             </button>
+
             <button onClick={handleDownload} className="md:hidden">
               <Image src={`/download.svg`} width={30} height={30} alt={`img`} />
             </button>
           </div>
         </div>
       ) : (
-        // normal
+        // normal size
         <>
           <div className="pl-3 flex flex-row gap-3 w-[53%] md:w-[50%]">
             <Image
@@ -111,7 +119,7 @@ function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
               width={40}
               height={40}
             />
-            <p>{name}</p>
+            <div>{name}</div>
           </div>
           <div className="flex flex-row items-center place-items-end justify-center lg:justify-between md:w-[50%]">
             <div className="text-sm md:text-base">{size}</div>
@@ -122,9 +130,9 @@ function FileCardItem({ name, size, lastModified, url, nameOriginal }) {
               onClick={handleDownload}
               className="hidden md:block pr-3 bg-blue-300 p-2 rounded-lg"
             >
-              Download
+              {"Download"}
             </button>
-            <button onClick={handleDownload} className="md:hidden">
+            <button onClick={handleDownload} className={`md:hidden `}>
               <Image src={`/download.svg`} width={30} height={30} alt={`img`} />
             </button>
           </div>

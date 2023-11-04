@@ -1,5 +1,5 @@
 import React from "react";
-import UploadFileCard from "./parts/UploadFileCard";
+import UploadFileCard from "./partials/UploadFileCard";
 
 function UploadFile() {
   return (

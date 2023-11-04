@@ -7,6 +7,7 @@ const initialState = {
   sharedVariable: null,
   selectedFile: [],
   sessionStatus: [],
+  onSuccess: false,
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -25,6 +26,11 @@ const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         sessionStatus: action.payload,
+      };
+    case "ON_SUCCESS":
+      return {
+        ...state,
+        onSuccess: action.payload,
       };
     default:
       return state;

@@ -1,15 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import FileCardItem from "./FileCardItem";
-import { db } from "@/config/FirebaseConfig";
-import { collection, getDocs } from "firebase/firestore/lite";
 import {
   shortenFileName,
   convertSize,
-  fetchDataFirestore,
   responsiveDesign,
-} from "@/utils/functions";
+} from "@/app/utils/functions";
 import { useSelector } from "react-redux";
+import { fetchDataFirestore } from "@/app/api/controllers/Firestore";
 
 function FileCard() {
   const [datas, setDatas] = useState([]);
@@ -21,45 +19,21 @@ function FileCard() {
   // responsive design
   responsiveDesign(setItemsToShow);
 
+  // fetch data from Firestore
   useEffect(() => {
     const getData = async () => {
-      const dataFirestore = await fetchDataFirestore(getDocs, collection, db);
+      const ref = "images";
+      const dataFirestore = await fetchDataFirestore(ref);
       dataFirestore.sort(
         (a, b) => new Date(b.lastmodified) - new Date(a.lastmodified)
       );
       setDatas(dataFirestore);
     };
-
-    // const getNewData = () => {
-    //   const colref = collection(db, "images");
-    //   let data = [];
-    //   onSnapshot(
-    //     colref,
-    //     (snapshot) => {
-    //       snapshot.docs.forEach((doc) =>
-    //         data.push({
-    //           name: doc.data().name,
-    //           size: doc.data().size,
-    //           url: doc.data().url,
-    //           lastmodified: doc.data().lastmodified,
-    //         })
-    //       );
-    //       data.sort(
-    //         (a, b) => new Date(b.lastmodified) - new Date(a.lastmodified)
-    //       );
-    //     },
-    //     (error) => {
-    //       console.error(error);
-    //     }
-    //   );
-    // };
-    // Call getData initially
     getData();
 
     // Call getNewData only when sharedVariable changes to 1
     if (sharedVariable === 1) {
       console.log(sharedVariable);
-      // getNewData();
     }
   }, [sharedVariable]);
   // filter datas
@@ -91,7 +65,7 @@ function FileCard() {
 
       <div className="flex flex-row items-center justify-between h-8 mt-5 font-bold bg-[#9DB2BF] rounded-md">
         <div className="pl-3 flex flex-row gap-3 w-[50%] md:w-[50%] ">
-          <p>Name</p>
+          <span>Name</span>
         </div>
         <div className="flex flex-row items-center lg:justify-between justify-center md:w-[50%] ">
           <div>Size</div>
@@ -103,25 +77,27 @@ function FileCard() {
       </div>
       {datas.length >= 1 ? (
         searchText.length > 0 ? (
-          searchToShow.map((item, index) => (
+          searchToShow.map((item) => (
             <FileCardItem
-              key={index}
+              key={item.docID}
               name={shortenFileName(item.name, itemsToShow == 1 ? 14 : 30)}
               size={convertSize(item.size)}
               nameOriginal={item.name}
               lastModified={item.lastmodified}
               url={item.url}
+              docID={item.docID}
             />
           ))
         ) : (
-          datas.map((item, index) => (
+          datas.map((item) => (
             <FileCardItem
-              key={index}
+              key={item.docID}
               name={shortenFileName(item.name, itemsToShow == 1 ? 14 : 30)}
               nameOriginal={item.name}
               size={convertSize(item.size)}
               lastModified={item.lastmodified}
               url={item.url}
+              docID={item.docID}
             />
           ))
         )

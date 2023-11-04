@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { SideBar, Navbar } from "../components/Home";
-import { onScrolling } from "@/utils/functions";
+import { SideBar, Navbar } from "@/app/components/Home";
+import { onScrolling } from "@/app/utils/functions";
 import { useSession } from "next-auth/react";
-import Login from "../components/login/Login";
-import AccessDenied from "../components/login/AccessDenied";
-import DashPro from "../components/pro/DashPro";
+import Login from "@/app/components/login/Login";
+import AccessDenied from "@/app/components/login/AccessDenied";
+import DashPro from "@/app/components/pro/DashPro";
 import { Provider } from "react-redux";
-import store from "../store";
+import store from "@/app/utils/ReduxStore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function Setting() {
