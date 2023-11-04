@@ -1,14 +1,31 @@
-import { getTypeImage, responsiveDesign } from "@/app/utils/functions";
+import { getTypeImage } from "@/app/utils/functions";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function FileCardItem({ name, size, lastModified, url, nameOriginal, docID }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [itemsToShow, setItemsToShow] = useState(1);
 
   //resposive design
-  responsiveDesign(setItemsToShow);
+  useEffect(() => {
+    function updateItemsToShow() {
+      if (window.innerWidth >= 1024) {
+        setItemsToShow(3);
+      } else if (window.innerWidth >= 768) {
+        setItemsToShow(2);
+      } else {
+        setItemsToShow(1);
+      }
+    }
+
+    updateItemsToShow();
+    window.addEventListener("resize", updateItemsToShow);
+
+    return () => {
+      window.removeEventListener("resize", updateItemsToShow);
+    };
+  }, []);
 
   // motion div
   let heightVariants;

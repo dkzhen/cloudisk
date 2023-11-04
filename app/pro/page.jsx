@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { SideBar, Navbar } from "@/app/components/Home";
-import { onScrolling } from "@/app/utils/functions";
 import { useSession } from "next-auth/react";
 import Login from "@/app/components/login/Login";
 import AccessDenied from "@/app/components/login/AccessDenied";
@@ -15,7 +14,20 @@ function Setting() {
   const [navClick, setNavClick] = useState(false);
   const [loginCredential, setLoginCredential] = useState("");
 
-  onScrolling(setScrolling);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setScrolling(true);
+      } else {
+        setScrolling(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleClick = () => {
     setNavClick(!navClick);

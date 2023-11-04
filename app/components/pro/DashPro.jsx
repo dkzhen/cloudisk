@@ -25,7 +25,7 @@ function DashPro(credential) {
       </div>
       <Divider content={"Setting"} />
       <div className="text-sm mt-2 italic text-red-600">
-        Note: Reload the page if the action doesn't work!
+        Note: Reload the page if the action doesnt work!
       </div>
       <SettingPro />
       <Divider content={"Files"} />

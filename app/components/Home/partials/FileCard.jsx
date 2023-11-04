@@ -1,11 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import FileCardItem from "./FileCardItem";
-import {
-  shortenFileName,
-  convertSize,
-  responsiveDesign,
-} from "@/app/utils/functions";
+import { shortenFileName, convertSize } from "@/app/utils/functions";
 import { useSelector } from "react-redux";
 import { fetchDataFirestore } from "@/app/api/controllers/Firestore";
 
@@ -17,7 +13,24 @@ function FileCard() {
   const [searchToShow, setSearchToShow] = useState([]);
 
   // responsive design
-  responsiveDesign(setItemsToShow);
+  useEffect(() => {
+    function updateItemsToShow() {
+      if (window.innerWidth >= 1024) {
+        setItemsToShow(3);
+      } else if (window.innerWidth >= 768) {
+        setItemsToShow(2);
+      } else {
+        setItemsToShow(1);
+      }
+    }
+
+    updateItemsToShow();
+    window.addEventListener("resize", updateItemsToShow);
+
+    return () => {
+      window.removeEventListener("resize", updateItemsToShow);
+    };
+  }, []);
 
   // fetch data from Firestore
   useEffect(() => {

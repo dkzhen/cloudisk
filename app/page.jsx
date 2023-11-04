@@ -1,6 +1,6 @@
 "use client";
 import { Provider } from "react-redux";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Navbar,
   SideBar,
@@ -13,13 +13,25 @@ import {
   Info,
 } from "./components/Home";
 import store from "./utils/ReduxStore";
-import { onScrolling } from "@/app/utils/functions";
 export default function Home() {
   const [scrolling, setScrolling] = useState(false);
   const [dataDivider, setDataDivider] = useState("0");
   const [navClick, setNavClick] = useState(false);
 
-  onScrolling(setScrolling);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setScrolling(true);
+      } else {
+        setScrolling(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const handleDividerReceived = (data) => {
     setDataDivider(data);

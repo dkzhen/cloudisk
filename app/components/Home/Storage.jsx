@@ -1,12 +1,28 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import StorageCard from "./partials/StorageCard";
 import { StorageInfo } from "@/app/utils/constants";
-import { responsiveDesign } from "@/app/utils/functions";
 function Storage({ dataReceived }) {
   const [itemsToShow, setItemsToShow] = useState(1);
 
-  responsiveDesign(setItemsToShow);
+  useEffect(() => {
+    function updateItemsToShow() {
+      if (window.innerWidth >= 1024) {
+        setItemsToShow(3);
+      } else if (window.innerWidth >= 768) {
+        setItemsToShow(2);
+      } else {
+        setItemsToShow(1);
+      }
+    }
+
+    updateItemsToShow();
+    window.addEventListener("resize", updateItemsToShow);
+
+    return () => {
+      window.removeEventListener("resize", updateItemsToShow);
+    };
+  }, []);
 
   return (
     <div
