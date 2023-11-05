@@ -11,6 +11,7 @@ function FileCard() {
   const sharedVariable = useSelector((state) => state.sharedVariable);
   const [searchText, setSearchText] = useState("");
   const [searchToShow, setSearchToShow] = useState([]);
+  const [quotaLimit, setQuotaLimit] = useState(false);
 
   // responsive design
   useEffect(() => {
@@ -35,12 +36,19 @@ function FileCard() {
   // fetch data from Firestore
   useEffect(() => {
     const getData = async () => {
-      const ref = "images";
-      const dataFirestore = await fetchDataFirestore(ref);
-      dataFirestore.sort(
-        (a, b) => new Date(b.lastmodified) - new Date(a.lastmodified)
-      );
-      setDatas(dataFirestore);
+      try {
+        const ref = "images";
+        const dataFirestore = await fetchDataFirestore(ref);
+        dataFirestore.sort(
+          (a, b) => new Date(b.lastmodified) - new Date(a.lastmodified)
+        );
+        setDatas(dataFirestore);
+        setQuotaLimit(true);
+        // console.log("firebase");
+      } catch (error) {
+        setQuotaLimit(false);
+        // console.error("Firebase Quota exceeded.");
+      }
     };
     getData();
 
@@ -114,9 +122,29 @@ function FileCard() {
             />
           ))
         )
-      ) : (
+      ) : quotaLimit ? (
         <div className="w-full flex justify-center items-center bg-[#9DB2BF] mt-[2px] rounded-md p-2 mb-4">
           No data available
+        </div>
+      ) : (
+        <div
+          className="flex items-center p-4 mb-4 mt-2 text-sm text-red-800 rounded-lg bg-red-50"
+          role="alert"
+        >
+          <svg
+            className="flex-shrink-0 inline w-4 h-4 mr-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+          </svg>
+          <span className="sr-only">Info</span>
+          <div>
+            <span className="font-medium">Warning!</span> Firebase Quota
+            exceeded.
+          </div>
         </div>
       )}
     </div>

@@ -3,6 +3,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { authOptions } from "./api/auth/[...nextauth]/route";
 import SessionProvider from "./utils/SessionProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +19,7 @@ export default async function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <SessionProvider session={session}>{children}</SessionProvider>
+        <Analytics />
       </body>
     </html>
   );
